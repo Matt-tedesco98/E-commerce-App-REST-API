@@ -1,4 +1,4 @@
-const db = require('../db');
+const db = require('../db/index');
 
 const createUser = async ({ email, hashedPassword, firstname, lastname }) => {
     const result = await db.query('INSERT INTO users (email, password, firstname, lastname) VALUES ($1, $2, $3, $4) RETURNING *', [email, hashedPassword, firstname, lastname]);
