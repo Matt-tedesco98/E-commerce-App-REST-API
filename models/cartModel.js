@@ -32,11 +32,11 @@ const addItemToCart = async (userId, productId, quantity = 1) => {
 
     if (existingItem.rows.length > 0) {
         const updatedItem = await db.query(`UPDATE cartitems
-                                          SET quantity = quantity + $1,
-                                              modified = now()
-                                          WHERE cartid = $2
-                                            and productid = $3
-                                          RETURNING *`, [quantity, cartId, productId]);
+                                            SET quantity = quantity + $1,
+                                                modified = now()
+                                            WHERE cartid = $2
+                                              and productid = $3
+                                            RETURNING *`, [quantity, cartId, productId]);
         return updatedItem.rows[0];
     } else {
         const newItem = await db.query(`INSERT INTO cartitems (cartid, productid, quantity, created, modified)
@@ -46,9 +46,32 @@ const addItemToCart = async (userId, productId, quantity = 1) => {
     }
 };
 
+const updateCartItem = async (userId, productId, quantity) => {
+    if (quantity <= 0) {
+        return deleteCartItem(userId, productId);
+    }
+    const result = await db.query(`UPDATE cartitems
+                                   set quantity = $1,
+                                       modified = now()
+                                   where cartid = $2
+                                     and productid = $3
+                                   returning *`, [quantity, userId, productId]);
+    return result.rows[0];
+};
+
+const deleteCartItem = async (userId, productId) => {
+    const result = await db.query(`DELETE
+                                   FROM cartitems
+                                   WHERE cartid = $1
+                                     and productid = $2
+                                   returning *`, [userId, productId]);
+    return result.rows[0];
+}
 
 module.exports = {
     getCartByUserId,
     createCart,
     addItemToCart,
+    updateCartItem,
+    deleteCartItem,
 }
