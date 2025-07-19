@@ -1,7 +1,6 @@
 const productModel = require('../models/productModel');
 
 const getAllProducts = async (req, res) => {
-
     try {
         const result = await productModel.getAllProducts();
         if (!result.rows.length) {
@@ -70,9 +69,5 @@ const deleteProduct = async (req, res) => {
 }
 
 module.exports = {
-    getAllProducts,
-    getProductById,
-    createProduct,
-    updateProduct,
-    deleteProduct,
+    getAllProducts, getProductById, createProduct, updateProduct, deleteProduct,
 }
