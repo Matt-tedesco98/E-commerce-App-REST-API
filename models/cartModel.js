@@ -68,10 +68,18 @@ const deleteCartItem = async (userId, productId) => {
     return result.rows[0];
 }
 
+const clearCartItems = async (userId) => {
+    const result = await db.query(`delete
+                                   FROM cartitems
+                                   WHERE cartid = $1`, [userId]);
+    return result.rows;
+}
+
 module.exports = {
     getCartByUserId,
     createCart,
     addItemToCart,
     updateCartItem,
     deleteCartItem,
+    clearCartItems,
 }
